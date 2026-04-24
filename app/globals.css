@@ -1,0 +1,139 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-gallery-white text-gallery-black font-sans font-light;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  ::selection {
+    background: #C8581A;
+    color: white;
+  }
+}
+
+@layer components {
+  /* ── Typography ── */
+  .label {
+    @apply text-2xs tracking-widest uppercase text-gallery-gray font-light;
+  }
+
+  .heading-xl {
+    @apply font-serif font-light leading-none tracking-tight;
+    font-size: clamp(42px, 6vw, 88px);
+  }
+
+  .heading-lg {
+    @apply font-serif font-light leading-tight;
+    font-size: clamp(32px, 4vw, 56px);
+  }
+
+  .heading-md {
+    @apply font-serif font-light leading-snug;
+    font-size: clamp(22px, 2.5vw, 36px);
+  }
+
+  .body-text {
+    @apply text-gallery-darkgray font-light leading-loose;
+    font-size: 14px;
+  }
+
+  /* ── Buttons ── */
+  .btn-primary {
+    @apply inline-block bg-gallery-black text-gallery-white font-sans font-light
+           text-xs tracking-wider uppercase px-8 py-3
+           transition-colors duration-200 hover:bg-gallery-darkgray cursor-pointer;
+  }
+
+  .btn-ghost {
+    @apply inline-block bg-transparent text-gallery-black font-sans font-light
+           text-xs tracking-wider uppercase px-8 py-3 border border-gallery-lightgray
+           transition-colors duration-200 hover:border-gallery-black cursor-pointer;
+  }
+
+  .btn-text-link {
+    @apply inline-block text-gallery-black font-sans font-light
+           text-2xs tracking-wider uppercase
+           border-b border-gallery-black pb-px
+           transition-colors duration-200 hover:text-gallery-gray hover:border-gallery-gray;
+  }
+
+  .btn-text-link-orange {
+    @apply inline-block text-gallery-orange font-sans font-light
+           text-2xs tracking-wider uppercase
+           border-b border-gallery-orange pb-px
+           transition-colors duration-200 hover:opacity-70;
+  }
+
+  /* ── Form elements ── */
+  .form-input {
+    @apply w-full bg-transparent border-0 border-b border-gallery-lightgray
+           font-sans font-light text-sm text-gallery-black
+           py-2.5 px-0 outline-none
+           transition-colors duration-200
+           focus:border-gallery-black placeholder:text-gallery-gray;
+  }
+
+  .form-select {
+    @apply w-full bg-gallery-white border-0 border-b border-gallery-lightgray
+           font-sans font-light text-sm text-gallery-black
+           py-2.5 px-0 outline-none cursor-pointer
+           transition-colors duration-200
+           focus:border-gallery-black;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23999'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 2px center;
+    padding-right: 18px;
+  }
+
+  .form-textarea {
+    @apply w-full bg-transparent border-0 border-b border-gallery-lightgray
+           font-sans font-light text-sm text-gallery-black
+           py-2.5 px-0 outline-none resize-none
+           transition-colors duration-200
+           focus:border-gallery-black placeholder:text-gallery-gray;
+  }
+
+  /* ── Nav ── */
+  .nav-link {
+    @apply text-2xs tracking-widest uppercase text-gallery-gray font-light
+           transition-colors duration-200 hover:text-gallery-black;
+  }
+
+  /* ── Status pills ── */
+  .pill-online   { @apply bg-emerald-50  text-emerald-700  text-2xs tracking-wider uppercase px-2.5 py-1; }
+  .pill-upcoming { @apply bg-orange-50   text-gallery-orange text-2xs tracking-wider uppercase px-2.5 py-1; }
+  .pill-past     { @apply bg-gallery-offwhite text-gallery-gray text-2xs tracking-wider uppercase px-2.5 py-1; }
+
+  /* ── Dividers ── */
+  .rule { @apply border-t border-gallery-lightgray; }
+}
+
+/* ── Animations ── */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 32s linear infinite;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-up {
+  animation: fadeUp 0.7s ease forwards;
+}
