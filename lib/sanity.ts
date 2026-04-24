@@ -26,6 +26,8 @@ export interface Artist {
   featured: boolean
   emerging: boolean
   artworks: Artwork[]
+  website?: string
+  instagram?: string
 }
 
 export interface Artwork {
@@ -61,6 +63,7 @@ export const ARTISTS_QUERY = `*[_type == "artist"] | order(featured desc, name a
 
 export const ARTIST_QUERY = `*[_type == "artist" && slug.current == $slug][0] {
   _id, name, slug, photo, medium, bio, featured, emerging,
+  website, instagram,
   artworks[]-> { _id, title, year, medium, dimensions, image, price, sold }
 }`
 
