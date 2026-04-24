@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
     await resend.emails.send({
       from: 'MiSaZi Inquiry <noreply@misaziart.com>',
       to:   ['info@misaziart.com'],
-      replyTo: email,
+      reply_to: email,
       subject: `Artwork Inquiry — ${artist || 'General'} — ${firstName} ${lastName}`,
       html: `
         <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; padding: 40px; color: #0D0D0D;">
