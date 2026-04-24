@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import NewsletterForm from './NewsletterForm'
 
 export default function Footer() {
   const year = new Date().getFullYear()
@@ -35,16 +36,13 @@ export default function Footer() {
         <div>
           <h4 className="label text-white/30 mb-5">Exhibitions</h4>
           {[
-            ['Online Exhibition',  '/exhibitions/online'],
-            ['Upcoming Shows',     '/exhibitions/upcoming'],
-            ['Past Exhibitions',   '/exhibitions/past'],
-            ['Art Fairs',          '/exhibitions/fairs'],
+            ['Online Exhibition',  '/exhibitions'],
+            ['Upcoming Shows',     '/exhibitions'],
+            ['Past Exhibitions',   '/exhibitions'],
+            ['Art Fairs',          '/exhibitions'],
           ].map(([label, href]) => (
-            <Link
-              key={href}
-              href={href}
-              className="block text-[12px] text-white/50 font-light mb-3 hover:text-white transition-colors"
-            >
+            <Link key={label} href={href}
+              className="block text-[12px] text-white/50 font-light mb-3 hover:text-white transition-colors">
               {label}
             </Link>
           ))}
@@ -55,15 +53,12 @@ export default function Footer() {
           <h4 className="label text-white/30 mb-5">Artists</h4>
           {[
             ['Featured Artists',   '/artists'],
-            ['Emerging Artists',   '/artists#emerging'],
+            ['Emerging Artists',   '/artists'],
             ['Submit Your Work',   '/submissions'],
             ['Workshops',          '/workshops'],
           ].map(([label, href]) => (
-            <Link
-              key={href}
-              href={href}
-              className="block text-[12px] text-white/50 font-light mb-3 hover:text-white transition-colors"
-            >
+            <Link key={label} href={href}
+              className="block text-[12px] text-white/50 font-light mb-3 hover:text-white transition-colors">
               {label}
             </Link>
           ))}
@@ -73,16 +68,13 @@ export default function Footer() {
         <div>
           <h4 className="label text-white/30 mb-5">Gallery</h4>
           {[
-            ['About Us',      '/about'],
-            ['Contact',       '/contact'],
-            ['Press',         '/press'],
-            ['Privacy Policy','/privacy'],
+            ['About Us',       '/about'],
+            ['Contact',        '/contact'],
+            ['Submit Work',    '/submissions'],
+            ['Privacy Policy', '/about'],
           ].map(([label, href]) => (
-            <Link
-              key={href}
-              href={href}
-              className="block text-[12px] text-white/50 font-light mb-3 hover:text-white transition-colors"
-            >
+            <Link key={label} href={href}
+              className="block text-[12px] text-white/50 font-light mb-3 hover:text-white transition-colors">
               {label}
             </Link>
           ))}
@@ -96,43 +88,14 @@ export default function Footer() {
         </p>
         <div className="flex gap-6">
           {['Instagram', 'Facebook', 'LinkedIn'].map((platform) => (
-            <a
-              key={platform}
-              href={`https://${platform.toLowerCase()}.com`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[10px] tracking-widest uppercase text-white/30 hover:text-white transition-colors"
-            >
+            <a key={platform} href={`https://${platform.toLowerCase()}.com`}
+              target="_blank" rel="noopener noreferrer"
+              className="text-[10px] tracking-widest uppercase text-white/30 hover:text-white transition-colors">
               {platform}
             </a>
           ))}
         </div>
       </div>
     </footer>
-  )
-}
-
-function NewsletterForm() {
-  return (
-    <form
-      className="flex gap-0 shrink-0"
-      onSubmit={(e) => e.preventDefault()}
-    >
-      <input
-        type="email"
-        placeholder="your@email.com"
-        className="w-[220px] bg-white/5 border border-white/15 text-white placeholder:text-white/30
-                   font-sans font-light text-[13px] px-4 py-3 outline-none
-                   focus:border-white/40 transition-colors"
-      />
-      <button
-        type="submit"
-        className="bg-white text-gallery-black font-sans font-light text-[11px]
-                   tracking-widest uppercase px-5 py-3 whitespace-nowrap
-                   hover:bg-gallery-offwhite transition-colors"
-      >
-        Subscribe
-      </button>
-    </form>
   )
 }
