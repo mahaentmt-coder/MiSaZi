@@ -103,7 +103,7 @@ export const ARTWORKS_QUERY = `*[_type == "artwork"] | order(_createdAt desc) {
 
 export const ARTWORKS_WITH_ARTIST_QUERY = `*[_type == "artist" && name != "Jamal Arabzadeh"] {
   _id, name, slug, featured,
-  artworks[]->{ _id, title, year, medium, dimensions, image, price, sold }
+  artworks[]->{ _id, title, year, medium, dimensions, image, price, sold, featured }
 }`
 
 export const EXHIBITION_QUERY = `*[_type == "exhibition" && slug.current == $slug][0] {

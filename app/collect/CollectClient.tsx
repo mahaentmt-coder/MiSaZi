@@ -51,7 +51,9 @@ export default function CollectClient({ artworks }: { artworks: ArtworkWithArtis
   }), [artworks, showAvailableOnly, selectedArtist, selectedMedium, priceRange])
 
   const available = artworks.filter(a => !a.sold)
-  const featured = artworks.find(a => !a.sold && a.image) || artworks[0]
+  const featured = artworks.find(a => (a as any).featured && !a.sold && a.image)
+    || artworks.find(a => !a.sold && a.image)
+    || artworks[0]
 
   const clearFilters = () => {
     setShowAvailableOnly(false)
