@@ -3,6 +3,15 @@
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
 
+const NAV_LINKS = [
+  { href: '/exhibitions', label: 'Exhibitions' },
+  { href: '/artists',     label: 'Artists'     },
+  { href: '/collect',     label: 'Collect'     },
+  { href: '/workshops',   label: 'Workshops'   },
+  { href: '/about',       label: 'About'       },
+  { href: '/contact',     label: 'Contact'     },
+]
+
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
@@ -24,13 +33,7 @@ export default function Nav() {
         </Link>
 
         <ul className="hidden md:flex gap-8 list-none">
-          {[
-            { href: '/exhibitions', label: 'Exhibitions' },
-            { href: '/artists',     label: 'Artists'     },
-            { href: '/workshops',   label: 'Workshops'   },
-            { href: '/about',       label: 'About'       },
-            { href: '/contact',     label: 'Contact'     },
-          ].map(({ href, label }) => (
+          {NAV_LINKS.map(({ href, label }) => (
             <li key={href}>
               <Link href={href} className="nav-link">{label}</Link>
             </li>
@@ -50,13 +53,7 @@ export default function Nav() {
 
       {menuOpen && (
         <div className="md:hidden bg-white border-t border-gallery-lightgray px-8 py-6 flex flex-col gap-5">
-          {[
-            { href: '/exhibitions', label: 'Exhibitions' },
-            { href: '/artists',     label: 'Artists'     },
-            { href: '/workshops',   label: 'Workshops'   },
-            { href: '/about',       label: 'About'       },
-            { href: '/contact',     label: 'Contact'     },
-          ].map(({ href, label }) => (
+          {NAV_LINKS.map(({ href, label }) => (
             <Link key={href} href={href} className="nav-link" onClick={() => setMenuOpen(false)}>{label}</Link>
           ))}
         </div>

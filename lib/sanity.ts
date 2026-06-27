@@ -96,6 +96,16 @@ export const EXHIBITIONS_QUERY = `*[_type == "exhibition"] | order(startDate des
   artists[]-> { name, slug, photo, artworks[]-> { image } }
 }`
 
+export const ARTWORKS_QUERY = `*[_type == "artwork"] | order(_createdAt desc) {
+  _id, title, year, medium, dimensions, image, price, sold,
+  artist->{ _id, name, slug, photo, medium, featured }
+}`
+
+export const ARTWORKS_WITH_ARTIST_QUERY = `*[_type == "artist"] {
+  _id, name, slug, featured,
+  artworks[]->{ _id, title, year, medium, dimensions, image, price, sold }
+}`
+
 export const EXHIBITION_QUERY = `*[_type == "exhibition" && slug.current == $slug][0] {
   _id, title, slug, status, startDate, endDate, location, description, coverImage,
   artists[]-> { name, slug, photo, bio, medium, artworks[]-> { _id, title, year, medium, dimensions, image } }
