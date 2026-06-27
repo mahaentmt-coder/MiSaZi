@@ -58,19 +58,19 @@ function Lightbox({ artwork, onClose, onPrev, onNext, hasPrev, hasNext }: {
         <button onClick={e => { e.stopPropagation(); onNext() }} className="absolute right-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white text-4xl z-10 px-2">›</button>
       )}
 
-      <div className="flex flex-col md:flex-row max-w-5xl w-full max-h-[90vh] mx-8 gap-0" onClick={e => e.stopPropagation()}>
-        <div className="relative flex-1 min-h-[50vh] md:min-h-0 bg-black">
+      <div className="flex flex-col md:flex-row w-full mx-4 md:mx-8 gap-0" style={{maxHeight:'90vh'}} onClick={e => e.stopPropagation()}>
+        <div className="relative bg-black" style={{flex:'1 1 0', minHeight:'60vh'}}>
           {artwork.image && (
             <Image
-              src={urlFor(artwork.image).width(1200).url()}
+              src={urlFor(artwork.image).width(1600).url()}
               fill
               alt={artwork.title || ''}
               className="object-contain"
-              sizes="(max-width: 768px) 100vw, 70vw"
+              sizes="(max-width: 768px) 100vw, 75vw"
             />
           )}
         </div>
-        <div className="bg-white md:w-64 px-6 py-8 flex flex-col justify-between shrink-0">
+        <div className="bg-white md:w-56 px-6 py-8 flex flex-col justify-between shrink-0 overflow-y-auto">
           <div>
             {artwork.artist?.name && (
               <p className="label text-gallery-gray mb-2">{artwork.artist.name}</p>
@@ -126,9 +126,7 @@ export default function CollectClient({ artworks }: { artworks: ArtworkWithArtis
   }), [artworks, showAvailableOnly, selectedArtist, selectedMedium, priceRange])
 
   const available = artworks.filter(a => !a.sold)
-  const featured = artworks.find(a => (a as any).featured && !a.sold && a.image)
-    || artworks.find(a => !a.sold && a.image)
-    || artworks[0]
+  const featured = artworks.find(a => (a as any).featured && !a.sold && a.image) || artworks.find(a => !a.sold && a.image) || artworks[0]
 
   const lightboxIndex = useMemo(() => filtered.findIndex(a => a._id === lightboxId), [filtered, lightboxId])
   const lightboxArtwork = lightboxIndex >= 0 ? filtered[lightboxIndex] : null
