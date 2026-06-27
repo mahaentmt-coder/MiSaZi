@@ -19,6 +19,14 @@ export const metadata: Metadata = {
     title: 'MiSaZi Art Gallery — New York',
     description: 'Contemporary art from Central Asia and beyond.',
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'MiSaZi Art Gallery — New York',
+    description: 'Contemporary art from Central Asia and beyond.',
+  },
+  alternates: {
+    canonical: 'https://misaziart.com',
+  },
 }
 
 export default function RootLayout({
