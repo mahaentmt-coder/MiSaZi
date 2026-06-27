@@ -42,6 +42,19 @@ export interface Artwork {
   artist: { name: string; slug: { current: string } }
 }
 
+export interface Workshop {
+  _id: string
+  title: string
+  slug: { current: string }
+  status: 'upcoming' | 'past'
+  date?: string
+  instructor: string
+  description: string
+  topics?: string[]
+  category?: string
+  coverImage?: any
+}
+
 export interface Exhibition {
   _id: string
   title: string
@@ -65,6 +78,10 @@ export const ARTIST_QUERY = `*[_type == "artist" && slug.current == $slug][0] {
   _id, name, slug, photo, medium, bio, featured, emerging,
   website, instagram,
   artworks[]-> { _id, title, year, medium, dimensions, image, price, sold }
+}`
+
+export const WORKSHOPS_QUERY = `*[_type == "workshop"] | order(status asc, date desc) {
+  _id, title, slug, status, date, instructor, description, topics, category, coverImage
 }`
 
 export const EXHIBITIONS_QUERY = `*[_type == "exhibition"] | order(startDate desc) {
