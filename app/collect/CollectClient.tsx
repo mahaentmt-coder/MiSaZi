@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useCallback } from 'react'
 import { urlFor } from '@/lib/sanity'
 import type { Artwork } from '@/lib/sanity'
 
@@ -23,12 +23,87 @@ const PRICE_RANGES = [
   { label: 'Above $5,000', min: 5000, max: Infinity },
 ]
 
+function Lightbox({ artwork, onClose, onPrev, onNext, hasPrev, hasNext }: {
+  artwork: ArtworkWithArtist
+  onClose: () => void
+  onPrev: () => void
+  onNext: () => void
+  hasPrev: boolean
+  hasNext: boolean
+}) {
+  const inquiryUrl = `/contact?subject=${encodeURIComponent(`Inquiry: ${artwork.title || 'Artwork'}`)}&artist=${encodeURIComponent(artwork.artist?.name || '')}`
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+      if (e.key === 'ArrowLeft') onPrev()
+      if (e.key === 'ArrowRight') onNext()
+    }
+    document.addEventListener('keydown', onKey)
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.removeEventListener('keydown', onKey)
+      document.body.style.overflow = ''
+    }
+  }, [onClose, onPrev, onNext])
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90" onClick={onClose}>
+      <button onClick={onClose} className="absolute top-4 right-6 text-white/70 hover:text-white text-3xl leading-none z-10">×</button>
+
+      {hasPrev && (
+        <button onClick={e => { e.stopPropagation(); onPrev() }} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white text-4xl z-10 px-2">‹</button>
+      )}
+      {hasNext && (
+        <button onClick={e => { e.stopPropagation(); onNext() }} className="absolute right-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white text-4xl z-10 px-2">›</button>
+      )}
+
+      <div className="flex flex-col md:flex-row max-w-5xl w-full max-h-[90vh] mx-8 gap-0" onClick={e => e.stopPropagation()}>
+        <div className="relative flex-1 min-h-[50vh] md:min-h-0 bg-black">
+          {artwork.image && (
+            <Image
+              src={urlFor(artwork.image).width(1200).url()}
+              fill
+              alt={artwork.title || ''}
+              className="object-contain"
+              sizes="(max-width: 768px) 100vw, 70vw"
+            />
+          )}
+        </div>
+        <div className="bg-white md:w-64 px-6 py-8 flex flex-col justify-between shrink-0">
+          <div>
+            {artwork.artist?.name && (
+              <p className="label text-gallery-gray mb-2">{artwork.artist.name}</p>
+            )}
+            <h3 className="font-serif font-light text-xl mb-4">{artwork.title || 'Untitled'}{artwork.year ? `, ${artwork.year}` : ''}</h3>
+            <div className="space-y-1 text-sm font-light text-gallery-gray mb-6">
+              {artwork.medium && <p>{artwork.medium}</p>}
+              {artwork.dimensions && <p>{artwork.dimensions}</p>}
+            </div>
+            {artwork.sold ? (
+              <p className="text-xs tracking-widest uppercase text-gallery-gray">Sold</p>
+            ) : artwork.price ? (
+              <p className="font-serif text-2xl">${artwork.price.toLocaleString()}</p>
+            ) : (
+              <p className="text-sm italic text-gallery-gray">Price on request</p>
+            )}
+          </div>
+          {!artwork.sold && (
+            <Link href={inquiryUrl} className="btn-primary text-center mt-6">Inquire</Link>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function CollectClient({ artworks }: { artworks: ArtworkWithArtist[] }) {
   const [selectedMedium, setSelectedMedium] = useState('All')
   const [selectedPrice, setSelectedPrice] = useState(0)
   const [selectedArtist, setSelectedArtist] = useState('All')
   const [showAvailableOnly, setShowAvailableOnly] = useState(false)
   const [hoveredId, setHoveredId] = useState<string | null>(null)
+  const [lightboxId, setLightboxId] = useState<string | null>(null)
 
   const mediums = useMemo(() => {
     const all = artworks.map(a => a.medium?.split('·')[0]?.split(',')[0]?.trim()).filter(Boolean)
@@ -55,6 +130,12 @@ export default function CollectClient({ artworks }: { artworks: ArtworkWithArtis
     || artworks.find(a => !a.sold && a.image)
     || artworks[0]
 
+  const lightboxIndex = useMemo(() => filtered.findIndex(a => a._id === lightboxId), [filtered, lightboxId])
+  const lightboxArtwork = lightboxIndex >= 0 ? filtered[lightboxIndex] : null
+  const closeLightbox = useCallback(() => setLightboxId(null), [])
+  const prevLightbox = useCallback(() => { if (lightboxIndex > 0) setLightboxId(filtered[lightboxIndex - 1]._id) }, [filtered, lightboxIndex])
+  const nextLightbox = useCallback(() => { if (lightboxIndex < filtered.length - 1) setLightboxId(filtered[lightboxIndex + 1]._id) }, [filtered, lightboxIndex])
+
   const clearFilters = () => {
     setShowAvailableOnly(false)
     setSelectedMedium('All')
@@ -65,6 +146,17 @@ export default function CollectClient({ artworks }: { artworks: ArtworkWithArtis
 
   return (
     <>
+      {lightboxArtwork && (
+        <Lightbox
+          artwork={lightboxArtwork}
+          onClose={closeLightbox}
+          onPrev={prevLightbox}
+          onNext={nextLightbox}
+          hasPrev={lightboxIndex > 0}
+          hasNext={lightboxIndex < filtered.length - 1}
+        />
+      )}
+
       {/* ── Hero ── */}
       <section className="relative bg-gallery-black text-white overflow-hidden">
         <div className="absolute inset-0 opacity-20">
@@ -208,6 +300,7 @@ export default function CollectClient({ artworks }: { artworks: ArtworkWithArtis
                 artwork={artwork}
                 hovered={hoveredId === artwork._id}
                 onHover={setHoveredId}
+                onZoom={setLightboxId}
               />
             ))}
           </div>
@@ -264,11 +357,12 @@ export default function CollectClient({ artworks }: { artworks: ArtworkWithArtis
 }
 
 function ArtworkCard({
-  artwork, hovered, onHover
+  artwork, hovered, onHover, onZoom
 }: {
   artwork: ArtworkWithArtist
   hovered: boolean
   onHover: (id: string | null) => void
+  onZoom: (id: string) => void
 }) {
   const inquiryUrl = `/contact?subject=${encodeURIComponent(`Inquiry: ${artwork.title || 'Artwork'}`)}&artist=${encodeURIComponent(artwork.artist?.name || '')}`
 
@@ -278,7 +372,7 @@ function ArtworkCard({
       onMouseEnter={() => onHover(artwork._id)}
       onMouseLeave={() => onHover(null)}
     >
-      <div className="aspect-[3/4] relative overflow-hidden bg-gallery-offwhite">
+      <div className="aspect-[3/4] relative overflow-hidden bg-gallery-offwhite cursor-zoom-in" onClick={() => artwork.image && onZoom(artwork._id)}>
         {artwork.image ? (
           <Image
             src={urlFor(artwork.image).width(600).url()}
@@ -299,9 +393,15 @@ function ArtworkCard({
           </div>
         )}
 
+        {hovered && artwork.image && !artwork.sold && (
+          <div className="absolute inset-0 bg-black/20 flex flex-col items-end justify-start p-3 gap-2 pointer-events-none">
+            <span className="bg-white/90 text-gallery-black text-2xs tracking-widest uppercase px-2 py-1">⊕ Zoom</span>
+          </div>
+        )}
+
         {!artwork.sold && hovered && (
-          <div className="absolute inset-0 bg-black/30 flex items-end p-4">
-            <Link href={inquiryUrl} className="w-full text-center bg-white text-gallery-black text-2xs tracking-widest uppercase py-3 hover:bg-gallery-orange hover:text-white transition-colors">
+          <div className="absolute inset-x-0 bottom-0 p-4" onClick={e => e.stopPropagation()}>
+            <Link href={inquiryUrl} className="block w-full text-center bg-white text-gallery-black text-2xs tracking-widest uppercase py-3 hover:bg-gallery-orange hover:text-white transition-colors">
               Inquire
             </Link>
           </div>
