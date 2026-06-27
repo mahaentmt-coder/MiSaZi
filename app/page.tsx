@@ -116,11 +116,14 @@ function ExhibitionsSection({ exhibitions }: { exhibitions: Exhibition[] }) {
         {exhibitions.slice(0, 4).map((ex) => (
           <div key={ex._id} className="grid grid-cols-[100px_1fr] md:grid-cols-[160px_1fr_180px_120px] gap-4 md:gap-6 items-center py-6">
             <div className="aspect-[4/3] bg-gallery-offwhite overflow-hidden">
-              {ex.coverImage ? (
-                <Image src={urlFor(ex.coverImage).width(200).url()} width={200} height={150} alt={ex.title} className="w-full h-full object-cover" />
-              ) : (
-                <div className="w-full h-full bg-gallery-lightgray" />
-              )}
+              {(() => {
+                const img = ex.coverImage
+                  ?? ex.artists?.[0]?.artworks?.[0]?.image
+                  ?? ex.artists?.[0]?.photo
+                return img
+                  ? <Image src={urlFor(img).width(200).url()} width={200} height={150} alt={ex.title} className="w-full h-full object-cover" />
+                  : <div className="w-full h-full bg-gallery-lightgray" />
+              })()}
             </div>
             <div>
               <p className="font-serif font-light text-lg leading-snug mb-1.5">{ex.title}</p>

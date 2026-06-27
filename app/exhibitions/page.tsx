@@ -80,18 +80,14 @@ function ExhibitionGroup({
           >
             {/* Cover image */}
             <div className="aspect-[16/9] relative overflow-hidden bg-gallery-offwhite">
-              {ex.coverImage ? (
-                <Image
-                  src={urlFor(ex.coverImage).width(800).url()}
-                  fill
-                  alt={ex.title}
-                  className="object-cover group-hover:scale-[1.03] transition-transform duration-500"
-                />
-              ) : (
-                <div className="w-full h-full bg-gallery-lightgray flex items-center justify-center">
-                  <span className="label">No image</span>
-                </div>
-              )}
+              {(() => {
+                const img = ex.coverImage
+                  ?? (ex.artists as any)?.[0]?.artworks?.[0]?.image
+                  ?? (ex.artists as any)?.[0]?.photo
+                return img
+                  ? <Image src={urlFor(img).width(800).url()} fill alt={ex.title} className="object-cover group-hover:scale-[1.03] transition-transform duration-500" />
+                  : <div className="w-full h-full bg-gallery-lightgray flex items-center justify-center"><span className="label">No image</span></div>
+              })()}
               <div className="absolute top-4 left-4">
                 <span className={
                   ex.status === 'online'   ? 'pill-online'   :
