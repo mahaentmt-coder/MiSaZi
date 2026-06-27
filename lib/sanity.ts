@@ -77,11 +77,11 @@ export interface Exhibition {
 
 // ── GROQ queries ───────────────────────────────────────
 
-export const ARTISTS_QUERY = `*[_type == "artist"] | order(featured desc, name asc) {
+export const ARTISTS_QUERY = `*[_type == "artist" && name != "Jamal Arabzadeh"] | order(featured desc, name asc) {
   _id, name, slug, photo, medium, bio, featured, emerging
 }`
 
-export const ARTIST_QUERY = `*[_type == "artist" && slug.current == $slug][0] {
+export const ARTIST_QUERY = `*[_type == "artist" && slug.current == $slug && name != "Jamal Arabzadeh"][0] {
   _id, name, slug, photo, medium, bio, featured, emerging,
   website, instagram,
   artworks[]-> { _id, title, year, medium, dimensions, image, price, sold }
@@ -101,7 +101,7 @@ export const ARTWORKS_QUERY = `*[_type == "artwork"] | order(_createdAt desc) {
   artist->{ _id, name, slug, photo, medium, featured }
 }`
 
-export const ARTWORKS_WITH_ARTIST_QUERY = `*[_type == "artist"] {
+export const ARTWORKS_WITH_ARTIST_QUERY = `*[_type == "artist" && name != "Jamal Arabzadeh"] {
   _id, name, slug, featured,
   artworks[]->{ _id, title, year, medium, dimensions, image, price, sold }
 }`
