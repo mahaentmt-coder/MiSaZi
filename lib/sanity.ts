@@ -65,7 +65,14 @@ export interface Exhibition {
   location: string
   description: string
   coverImage: any
-  artists: { name: string; slug: { current: string }; photo?: any; artworks?: { image: any }[] }[]
+  artists: {
+    name: string
+    slug: { current: string }
+    photo?: any
+    bio?: string
+    medium?: string
+    artworks?: { _id: string; title?: string; image: any; year?: string; medium?: string; dimensions?: string }[]
+  }[]
 }
 
 // ── GROQ queries ───────────────────────────────────────
@@ -91,5 +98,5 @@ export const EXHIBITIONS_QUERY = `*[_type == "exhibition"] | order(startDate des
 
 export const EXHIBITION_QUERY = `*[_type == "exhibition" && slug.current == $slug][0] {
   _id, title, slug, status, startDate, endDate, location, description, coverImage,
-  artists[]-> { name, slug, photo, medium }
+  artists[]-> { name, slug, photo, bio, medium, artworks[]-> { _id, title, year, medium, dimensions, image } }
 }`
