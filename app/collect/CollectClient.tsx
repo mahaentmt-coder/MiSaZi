@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { useState, useMemo, useEffect, useCallback } from 'react'
+import { useState, useMemo, useEffect, useCallback, useRef } from 'react'
 import { urlFor } from '@/lib/sanity'
 import type { Artwork } from '@/lib/sanity'
 
@@ -22,6 +22,81 @@ const PRICE_RANGES = [
   { label: '$1,500 – $5,000', min: 1500, max: 5000 },
   { label: 'Above $5,000', min: 5000, max: Infinity },
 ]
+
+function ZoomableImage({ src, alt }: { src: string; alt: string }) {
+  const [scale, setScale] = useState(1)
+  const [pos, setPos] = useState({ x: 0, y: 0 })
+  const [dragging, setDragging] = useState(false)
+  const dragStart = useRef<{ mx: number; my: number; px: number; py: number } | null>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  const clampPos = useCallback((x: number, y: number, s: number) => {
+    const el = containerRef.current
+    if (!el) return { x, y }
+    const maxX = (el.clientWidth * (s - 1)) / 2
+    const maxY = (el.clientHeight * (s - 1)) / 2
+    return { x: Math.max(-maxX, Math.min(maxX, x)), y: Math.max(-maxY, Math.min(maxY, y)) }
+  }, [])
+
+  const onWheel = useCallback((e: React.WheelEvent) => {
+    e.preventDefault()
+    setScale(prev => {
+      const next = Math.max(1, Math.min(5, prev - e.deltaY * 0.005))
+      if (next === 1) setPos({ x: 0, y: 0 })
+      return next
+    })
+  }, [])
+
+  const onMouseDown = useCallback((e: React.MouseEvent) => {
+    if (scale === 1) return
+    e.preventDefault()
+    setDragging(true)
+    dragStart.current = { mx: e.clientX, my: e.clientY, px: pos.x, py: pos.y }
+  }, [scale, pos])
+
+  const onMouseMove = useCallback((e: React.MouseEvent) => {
+    if (!dragging || !dragStart.current) return
+    const dx = e.clientX - dragStart.current.mx
+    const dy = e.clientY - dragStart.current.my
+    setPos(clampPos(dragStart.current.px + dx, dragStart.current.py + dy, scale))
+  }, [dragging, scale, clampPos])
+
+  const onMouseUp = useCallback(() => { setDragging(false); dragStart.current = null }, [])
+
+  const onDoubleClick = useCallback(() => {
+    if (scale > 1) { setScale(1); setPos({ x: 0, y: 0 }) } else { setScale(2.5) }
+  }, [scale])
+
+  return (
+    <div
+      ref={containerRef}
+      className="relative bg-black overflow-hidden"
+      style={{ flex: '1 1 0', minHeight: '60vh', cursor: scale > 1 ? (dragging ? 'grabbing' : 'grab') : 'zoom-in' }}
+      onWheel={onWheel}
+      onMouseDown={onMouseDown}
+      onMouseMove={onMouseMove}
+      onMouseUp={onMouseUp}
+      onMouseLeave={onMouseUp}
+      onDoubleClick={onDoubleClick}
+    >
+      <img
+        src={src}
+        alt={alt}
+        draggable={false}
+        style={{
+          position: 'absolute', inset: 0, width: '100%', height: '100%',
+          objectFit: 'contain',
+          transform: `scale(${scale}) translate(${pos.x / scale}px, ${pos.y / scale}px)`,
+          transition: dragging ? 'none' : 'transform 0.15s ease',
+          userSelect: 'none',
+        }}
+      />
+      {scale === 1 && (
+        <div className="absolute bottom-3 right-3 text-white/50 text-xs pointer-events-none">Scroll or double-click to zoom</div>
+      )}
+    </div>
+  )
+}
 
 function Lightbox({ artwork, onClose, onPrev, onNext, hasPrev, hasNext }: {
   artwork: ArtworkWithArtist
@@ -59,17 +134,10 @@ function Lightbox({ artwork, onClose, onPrev, onNext, hasPrev, hasNext }: {
       )}
 
       <div className="flex flex-col md:flex-row w-full mx-4 md:mx-8 gap-0" style={{maxHeight:'90vh'}} onClick={e => e.stopPropagation()}>
-        <div className="relative bg-black" style={{flex:'1 1 0', minHeight:'60vh'}}>
-          {artwork.image && (
-            <Image
-              src={urlFor(artwork.image).width(1600).url()}
-              fill
-              alt={artwork.title || ''}
-              className="object-contain"
-              sizes="(max-width: 768px) 100vw, 75vw"
-            />
-          )}
-        </div>
+        {artwork.image
+          ? <ZoomableImage src={urlFor(artwork.image).width(2400).url()} alt={artwork.title || ''} />
+          : <div className="flex-1 bg-black" />
+        }
         <div className="bg-white md:w-56 px-6 py-8 flex flex-col justify-between shrink-0 overflow-y-auto">
           <div>
             {artwork.artist?.name && (
