@@ -1,4 +1,6 @@
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
+import ContactForm from './ContactForm'
 
 export const metadata: Metadata = {
   title: 'Contact',
@@ -18,10 +20,10 @@ export default function ContactPage() {
             Our team is happy to assist with artwork inquiries, exhibition information, press requests, or any other questions about the gallery.
           </p>
           {[
-            ['Gallery',   '250 W. 50th St., New York, NY 10019'],
-            ['Email',     'info@misaziart.com'],
-            ['Hours',     'Mon – Fri · 10am – 6pm EST'],
-            ['Virtual',   'Zoom appointments available'],
+            ['Gallery', '250 W. 50th St., New York, NY 10019'],
+            ['Email', 'info@misaziart.com'],
+            ['Hours', 'Mon – Fri · 10am – 6pm EST'],
+            ['Virtual', 'Zoom appointments available'],
           ].map(([label, val]) => (
             <div key={label} className="mb-7">
               <p className="label mb-1">{label}</p>
@@ -33,24 +35,17 @@ export default function ContactPage() {
             <div className="flex gap-6">
               {[
                 ['Instagram', 'https://instagram.com'],
-                ['Facebook',  'https://facebook.com'],
-                ['LinkedIn',  'https://linkedin.com'],
+                ['Facebook', 'https://facebook.com'],
+                ['LinkedIn', 'https://linkedin.com'],
               ].map(([p, href]) => (
                 <a key={p} href={href} target="_blank" rel="noopener noreferrer" className="btn-text-link">{p}</a>
               ))}
             </div>
           </div>
         </div>
-        <div className="bg-gallery-offwhite p-10 flex flex-col justify-center">
-          <p className="label mb-4">Artwork Inquiries</p>
-          <h2 className="heading-md mb-6">Interested in <em>Collecting?</em></h2>
-          <p className="body-text mb-6">
-            To inquire about available works, please email us directly and our team will respond within 2 business days.
-          </p>
-          <a href="mailto:info@misaziart.com" className="btn-primary inline-block text-center">
-            Email Us
-          </a>
-        </div>
+        <Suspense fallback={<div className="bg-gallery-offwhite p-10 animate-pulse" />}>
+          <ContactForm />
+        </Suspense>
       </div>
     </div>
   )
