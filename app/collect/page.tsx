@@ -18,7 +18,7 @@ export default async function CollectPage() {
   )
 
   return (
-    <div className="mt-[60px]">
+    <div className="mt-[80px]">
       <CollectClient artworks={artworks} />
     </div>
   )

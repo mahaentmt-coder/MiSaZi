@@ -188,10 +188,13 @@ export default function CollectClient({ artworks }: { artworks: ArtworkWithArtis
   const filtered = useMemo(() => artworks.filter(a => {
     if (showAvailableOnly && a.sold) return false
     if (selectedArtist !== 'All' && a.artist?.name !== selectedArtist) return false
-    if (selectedMedium !== 'All' && !a.medium?.toLowerCase().includes(selectedMedium.toLowerCase())) return false
-    if (a.price !== undefined && (a.price < priceRange.min || a.price > priceRange.max)) return false
+    if (selectedMedium !== 'All' && !(a.medium ?? '').toLowerCase().includes(selectedMedium.toLowerCase())) return false
+    const price = a.price ?? null
+    if (selectedPrice !== 0) {
+      if (price === null || price < priceRange.min || price > priceRange.max) return false
+    }
     return true
-  }), [artworks, showAvailableOnly, selectedArtist, selectedMedium, priceRange])
+  }), [artworks, showAvailableOnly, selectedArtist, selectedMedium, selectedPrice, priceRange])
 
   const available = artworks.filter(a => !a.sold)
   const featured = artworks.find(a => (a as any).featured && !a.sold && a.image) || artworks.find(a => !a.sold && a.image) || artworks[0]
