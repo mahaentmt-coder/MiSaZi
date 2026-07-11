@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { client, urlFor, ARTISTS_QUERY, EXHIBITIONS_QUERY } from '@/lib/sanity'
+import { client, urlFor, ARTISTS_QUERY, EXHIBITIONS_QUERY, FEATURED_ARTWORK_QUERY } from '@/lib/sanity'
 import type { Artist, Exhibition } from '@/lib/sanity'
 
 const FALLBACK_ARTISTS: Partial<Artist>[] = [
@@ -23,24 +23,25 @@ const FALLBACK_EXHIBITIONS: Partial<Exhibition>[] = [
 
 async function getData() {
   try {
-    const [artists, exhibitions] = await Promise.all([
+    const [artists, exhibitions, featuredArtwork] = await Promise.all([
       client.fetch<Artist[]>(ARTISTS_QUERY),
       client.fetch<Exhibition[]>(EXHIBITIONS_QUERY),
+      client.fetch(FEATURED_ARTWORK_QUERY),
     ])
-    return { artists, exhibitions }
+    return { artists, exhibitions, featuredArtwork }
   } catch {
-    return { artists: FALLBACK_ARTISTS as Artist[], exhibitions: FALLBACK_EXHIBITIONS as Exhibition[] }
+    return { artists: FALLBACK_ARTISTS as Artist[], exhibitions: FALLBACK_EXHIBITIONS as Exhibition[], featuredArtwork: null }
   }
 }
 
 export default async function HomePage() {
-  const { artists, exhibitions } = await getData()
+  const { artists, exhibitions, featuredArtwork } = await getData()
   const featured = artists.filter((a) => a.featured).slice(0, 8)
   const ticker = [...artists, ...artists]
 
   return (
     <>
-      <HeroSection />
+      <HeroSection featuredArtwork={featuredArtwork} />
 
       {/* Ticker */}
       <div className="border-y border-gallery-lightgray py-3.5 overflow-hidden bg-white">
@@ -63,17 +64,34 @@ export default async function HomePage() {
   )
 }
 
-function HeroSection() {
+function HeroSection({ featuredArtwork }: { featuredArtwork: any }) {
   return (
     <section className="mt-[60px] grid md:grid-cols-2 min-h-[calc(100vh-60px)]">
       <div className="relative bg-[#E8E2D8] min-h-[50vw] md:min-h-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#D4C9B5] via-[#C8B89A] to-[#A89070] flex items-center justify-center">
-          <p className="label text-black/20">Featured Artwork</p>
-        </div>
-        <div className="absolute bottom-6 left-6">
-          <p className="label text-black/40 mb-1">Currently Showing</p>
-          <p className="font-serif text-sm text-black/60 italic">Diaspora Dialogues</p>
-        </div>
+        {featuredArtwork?.image ? (
+          <Image
+            src={urlFor(featuredArtwork.image).width(1200).url()}
+            fill
+            alt={featuredArtwork.title || 'Featured Artwork'}
+            className="object-cover"
+            priority
+          />
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-br from-[#D4C9B5] via-[#C8B89A] to-[#A89070] flex items-center justify-center">
+            <p className="label text-black/20">Featured Artwork</p>
+          </div>
+        )}
+        {featuredArtwork && (
+          <div className="absolute bottom-6 left-6 z-10">
+            <p className="label text-white/60 mb-1 drop-shadow">Featured Work</p>
+            <p className="font-serif text-sm text-white italic drop-shadow">{featuredArtwork.title}</p>
+            {featuredArtwork.artist && (
+              <Link href={`/artists/${featuredArtwork.artist.slug?.current}`} className="label text-white/70 hover:text-white transition-colors drop-shadow">
+                {featuredArtwork.artist.name}
+              </Link>
+            )}
+          </div>
+        )}
       </div>
       <div className="flex flex-col justify-between px-10 md:px-16 py-16 md:py-20 bg-white">
         <span className="label"><span className="text-gallery-orange">●&nbsp;</span>Online Exhibition Now Open</span>
