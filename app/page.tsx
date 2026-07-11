@@ -134,7 +134,7 @@ function ExhibitionsSection({ exhibitions }: { exhibitions: Exhibition[] }) {
                   {ex.artists.map((a, i) => (
                     <span key={a.name}>
                       {i > 0 && <span className="mx-1">·</span>}
-                      <Link href={`/artists/${a.slug?.current}`} className="hover:text-gallery-orange transition-colors" onClick={e => e.stopPropagation()}>
+                      <Link href={`/artists/${a.slug?.current}`} className="hover:text-gallery-orange transition-colors">
                         {a.name}
                       </Link>
                     </span>
