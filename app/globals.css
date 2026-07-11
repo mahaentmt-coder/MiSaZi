@@ -26,7 +26,7 @@
 @layer components {
   /* ── Typography ── */
   .label {
-    @apply text-2xs tracking-widest uppercase text-gallery-gray font-light;
+    @apply text-2xs tracking-widest uppercase text-gallery-darkgray font-light;
   }
 
   .heading-xl {

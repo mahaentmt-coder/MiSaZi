@@ -44,7 +44,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <HeroSection featuredArtwork={featuredArtwork} />
+      <HeroSection featuredArtwork={featuredArtwork} exhibitions={exhibitions} />
 
       {/* Ticker */}
       <div className="border-y border-gallery-lightgray py-3.5 overflow-hidden bg-white">
@@ -67,7 +67,13 @@ export default async function HomePage() {
   )
 }
 
-function HeroSection({ featuredArtwork }: { featuredArtwork: any }) {
+function HeroSection({ featuredArtwork, exhibitions }: { featuredArtwork: any; exhibitions: Exhibition[] }) {
+  const onlineEx = exhibitions.find(e => e.status === 'online')
+  const upcomingEx = !onlineEx ? exhibitions.find(e => e.status === 'upcoming') : null
+  const activeEx = onlineEx || upcomingEx
+  const badgeLabel = onlineEx ? 'Online Exhibition Now Open' : upcomingEx ? 'Upcoming Exhibition' : null
+  const locationLine = activeEx?.location || 'New York · Toronto · International'
+
   return (
     <section className="mt-[80px] grid md:grid-cols-2 min-h-[calc(100vh-80px)]">
       <div className="relative bg-[#E8E2D8] min-h-[50vw] md:min-h-0">
@@ -97,9 +103,17 @@ function HeroSection({ featuredArtwork }: { featuredArtwork: any }) {
         )}
       </div>
       <div className="flex flex-col justify-between px-10 md:px-16 py-16 md:py-20 bg-white">
-        <span className="label"><span className="text-gallery-orange">●&nbsp;</span>Online Exhibition Now Open</span>
+        {badgeLabel && activeEx?.slug?.current ? (
+          <Link href={`/exhibitions/${activeEx.slug.current}`} className="text-2xs tracking-widest uppercase text-gallery-darkgray hover:text-gallery-orange transition-colors">
+            <span className="text-gallery-orange">●&nbsp;</span>{badgeLabel}
+          </Link>
+        ) : badgeLabel ? (
+          <span className="text-2xs tracking-widest uppercase text-gallery-darkgray">
+            <span className="text-gallery-orange">●&nbsp;</span>{badgeLabel}
+          </span>
+        ) : <span />}
         <div>
-          <p className="label mb-8">New York · Toronto · International</p>
+          <p className="text-2xs tracking-widest uppercase text-gallery-darkgray mb-8">{locationLine}</p>
           <h1 className="heading-xl mb-8">A Place to<br /><em>Rise, Grow,</em><br />{'&'} Empower</h1>
           <p className="body-text max-w-sm mb-10 leading-loose">
             Championing contemporary artists from Central Asia and minority communities worldwide — through exhibitions, workshops, and meaningful cultural dialogue.
