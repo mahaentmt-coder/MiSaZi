@@ -130,7 +130,16 @@ function ExhibitionsSection({ exhibitions }: { exhibitions: Exhibition[] }) {
             <div>
               <p className="font-serif font-light text-lg leading-snug mb-1.5">{ex.title}</p>
               {ex.artists && ex.artists.length > 0 && (
-                <p className="text-xs text-gallery-gray font-light">{ex.artists.map((a) => a.name).join(' · ')}</p>
+                <p className="text-xs text-gallery-gray font-light">
+                  {ex.artists.map((a, i) => (
+                    <span key={a.name}>
+                      {i > 0 && <span className="mx-1">·</span>}
+                      <Link href={`/artists/${a.slug?.current}`} className="hover:text-gallery-orange transition-colors" onClick={e => e.stopPropagation()}>
+                        {a.name}
+                      </Link>
+                    </span>
+                  ))}
+                </p>
               )}
             </div>
             <p className="hidden md:block text-xs text-gallery-gray font-light">
