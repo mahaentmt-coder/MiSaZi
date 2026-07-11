@@ -66,7 +66,7 @@ export default async function HomePage() {
 
 function HeroSection({ featuredArtwork }: { featuredArtwork: any }) {
   return (
-    <section className="mt-[60px] grid md:grid-cols-2 min-h-[calc(100vh-60px)]">
+    <section className="mt-[80px] grid md:grid-cols-2 min-h-[calc(100vh-80px)]">
       <div className="relative bg-[#E8E2D8] min-h-[50vw] md:min-h-0">
         {featuredArtwork?.image ? (
           <Image
