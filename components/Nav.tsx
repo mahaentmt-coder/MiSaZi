@@ -28,8 +28,8 @@ export default function Nav() {
       scrolled ? 'bg-white/95 backdrop-blur-sm shadow-[0_1px_0_#E8E5E0]' : 'bg-white border-b border-gallery-lightgray'
     }`}>
       <nav className="flex items-center justify-between px-10 md:px-14 h-[80px]">
-        <Link href="/" className="flex items-center">
-          <Image src="/images/logo.png" alt="MiSaZi Art Gallery" height={52} width={160} className="h-13 w-auto object-contain" priority />
+        <Link href="/" className="flex items-center h-full py-2">
+          <Image src="/images/logo.png" alt="MiSaZi Art Gallery" height={72} width={72} className="h-full w-auto object-contain" priority />
         </Link>
 
         <ul className="hidden md:flex gap-10 list-none">
