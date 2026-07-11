@@ -124,7 +124,7 @@ function ExhibitionsSection({ exhibitions }: { exhibitions: Exhibition[] }) {
   const statusClass: Record<string, string> = { online: 'pill-online', upcoming: 'pill-upcoming', past: 'pill-past' }
 
   return (
-    <section className="px-8 md:px-10 py-20" id="exhibitions">
+    <section className="px-8 md:px-14 py-28 md:py-36" id="exhibitions">
       <div className="flex items-baseline justify-between mb-12 pb-4 border-b border-gallery-lightgray">
         <div>
           <p className="label mb-2">What's On</p>
@@ -176,7 +176,7 @@ function ExhibitionsSection({ exhibitions }: { exhibitions: Exhibition[] }) {
 
 function ArtistsSection({ artists }: { artists: Artist[] }) {
   return (
-    <section className="bg-gallery-offwhite px-8 md:px-10 py-20" id="artists">
+    <section className="bg-gallery-offwhite px-8 md:px-14 py-28 md:py-36" id="artists">
       <div className="flex items-baseline justify-between mb-12 pb-4 border-b border-gallery-lightgray">
         <div>
           <p className="label mb-2">Our Roster</p>
@@ -212,7 +212,7 @@ function ArtistsSection({ artists }: { artists: Artist[] }) {
 function AboutSection() {
   return (
     <section className="grid md:grid-cols-2" id="about">
-      <div className="bg-gallery-black text-white px-10 md:px-16 py-20 flex flex-col justify-between">
+      <div className="bg-gallery-black text-white px-12 md:px-20 py-28 md:py-36 flex flex-col justify-between">
         <div>
           <p className="label text-white/30 mb-10">Our Philosophy</p>
           <blockquote className="font-serif font-light italic text-3xl md:text-4xl leading-snug text-white mb-6">
@@ -229,7 +229,7 @@ function AboutSection() {
           ))}
         </div>
       </div>
-      <div className="bg-gallery-offwhite px-10 md:px-16 py-20 flex flex-col justify-center">
+      <div className="bg-gallery-offwhite px-12 md:px-20 py-28 md:py-36 flex flex-col justify-center">
         <p className="label text-gallery-gray mb-8">About MiSaZi</p>
         <h2 className="heading-md mb-6">Founded in New York,<br /><em>built for the world.</em></h2>
         <p className="body-text mb-5">

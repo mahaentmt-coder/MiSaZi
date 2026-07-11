@@ -9,10 +9,10 @@ import type { Artwork } from '@/lib/sanity'
 type ArtworkWithArtist = Artwork & { artist: { _id: string; name: string; slug: { current: string }; featured: boolean } }
 
 const TRUST_SIGNALS = [
-  { icon: '🎨', title: 'Original Works', desc: 'Every piece is a unique original, authenticated by the artist.' },
-  { icon: '🤝', title: 'Personal Guidance', desc: 'Our curators help you find the right work for your space and budget.' },
-  { icon: '🚚', title: 'Worldwide Shipping', desc: 'Professional art handling and insured shipping to your door.' },
-  { icon: '📜', title: 'Certificate of Authenticity', desc: 'Each work comes with full provenance documentation.' },
+  { num: '01', title: 'Original Works', desc: 'Every piece is a unique original, authenticated by the artist.' },
+  { num: '02', title: 'Personal Guidance', desc: 'Our curators help you find the right work for your space and budget.' },
+  { num: '03', title: 'Worldwide Shipping', desc: 'Professional art handling and insured shipping to your door.' },
+  { num: '04', title: 'Certificate of Authenticity', desc: 'Each work comes with full provenance documentation.' },
 ]
 
 const PRICE_RANGES = [
@@ -258,10 +258,10 @@ export default function CollectClient({ artworks }: { artworks: ArtworkWithArtis
 
       {/* ── Trust signals ── */}
       <section className="grid grid-cols-2 md:grid-cols-4 border-b border-gallery-lightgray">
-        {TRUST_SIGNALS.map(({ icon, title, desc }) => (
-          <div key={title} className="px-8 py-8 border-r border-gallery-lightgray last:border-r-0">
-            <div className="text-2xl mb-3">{icon}</div>
-            <p className="font-serif font-light text-base mb-1">{title}</p>
+        {TRUST_SIGNALS.map(({ num, title, desc }) => (
+          <div key={title} className="px-8 py-10 border-r border-gallery-lightgray last:border-r-0">
+            <p className="font-serif font-light text-3xl text-gallery-lightgray mb-4">{num}</p>
+            <p className="font-serif font-light text-base mb-2">{title}</p>
             <p className="text-xs font-light text-gallery-gray leading-relaxed">{desc}</p>
           </div>
         ))}
