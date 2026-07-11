@@ -128,7 +128,7 @@ function ExhibitionsSection({ exhibitions }: { exhibitions: Exhibition[] }) {
               })()}
             </div>
             <div>
-              <p className="font-serif font-light text-lg leading-snug mb-1.5">{ex.title}</p>
+              <Link href={`/exhibitions/${ex.slug?.current}`} className="font-serif font-light text-lg leading-snug mb-1.5 hover:text-gallery-orange transition-colors block">{ex.title}</Link>
               {ex.artists && ex.artists.length > 0 && (
                 <p className="text-xs text-gallery-gray font-light">
                   {ex.artists.map((a, i) => (
