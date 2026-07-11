@@ -36,7 +36,7 @@ async function getData() {
 export default async function HomePage() {
   const { artists, exhibitions } = await getData()
   const featured = artists.filter((a) => a.featured).slice(0, 8)
-  const ticker = [...artists.map((a) => a.name), ...artists.map((a) => a.name)]
+  const ticker = [...artists, ...artists]
 
   return (
     <>
@@ -45,9 +45,11 @@ export default async function HomePage() {
       {/* Ticker */}
       <div className="border-y border-gallery-lightgray py-3.5 overflow-hidden bg-white">
         <div className="flex whitespace-nowrap animate-marquee">
-          {ticker.map((name, i) => (
+          {ticker.map((artist, i) => (
             <span key={i} className="inline-flex items-center gap-8 mr-8">
-              <span className="label">{name}</span>
+              <Link href={`/artists/${artist.slug?.current}`} className="label hover:text-gallery-orange transition-colors">
+                {artist.name}
+              </Link>
               <span className="text-gallery-lightgray text-xs">—</span>
             </span>
           ))}
