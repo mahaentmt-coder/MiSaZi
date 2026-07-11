@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { useState, useEffect } from 'react'
 
 const NAV_LINKS = [
@@ -27,9 +28,8 @@ export default function Nav() {
       scrolled ? 'bg-white/95 backdrop-blur-sm shadow-[0_1px_0_#E8E5E0]' : 'bg-white border-b border-gallery-lightgray'
     }`}>
       <nav className="flex items-center justify-between px-8 md:px-10 h-[60px]">
-        <Link href="/" className="font-sans font-extralight text-sm tracking-widest uppercase text-gallery-black no-underline">
-          Mi<span className="text-gallery-orange">S</span>a<span className="text-gallery-orange">Z</span>i
-          <span className="ml-2 text-[10px] font-light text-gallery-gray tracking-widest hidden sm:inline">ART GALLERY</span>
+        <Link href="/" className="flex items-center">
+          <Image src="/images/logo.png" alt="MiSaZi Art Gallery" height={36} width={120} className="h-9 w-auto object-contain" priority />
         </Link>
 
         <ul className="hidden md:flex gap-8 list-none">
