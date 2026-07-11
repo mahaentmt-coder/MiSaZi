@@ -106,7 +106,7 @@ export const ARTWORKS_WITH_ARTIST_QUERY = `*[_type == "artist" && name != "Jamal
   artworks[]->{ _id, title, year, medium, dimensions, image, price, sold, featured }
 }`
 
-export const FEATURED_ARTWORK_QUERY = `*[_type == "artwork" && featured == true][0] {
+export const FEATURED_ARTWORKS_QUERY = `*[_type == "artwork" && featured == true] {
   _id, title, year, medium, dimensions, image,
   artist->{ name, slug }
 }`

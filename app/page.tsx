@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { client, urlFor, ARTISTS_QUERY, EXHIBITIONS_QUERY, FEATURED_ARTWORK_QUERY } from '@/lib/sanity'
+import { client, urlFor, ARTISTS_QUERY, EXHIBITIONS_QUERY, FEATURED_ARTWORKS_QUERY } from '@/lib/sanity'
 import type { Artist, Exhibition } from '@/lib/sanity'
 
 const FALLBACK_ARTISTS: Partial<Artist>[] = [
@@ -23,11 +23,14 @@ const FALLBACK_EXHIBITIONS: Partial<Exhibition>[] = [
 
 async function getData() {
   try {
-    const [artists, exhibitions, featuredArtwork] = await Promise.all([
+    const [artists, exhibitions, featuredArtworks] = await Promise.all([
       client.fetch<Artist[]>(ARTISTS_QUERY),
       client.fetch<Exhibition[]>(EXHIBITIONS_QUERY),
-      client.fetch(FEATURED_ARTWORK_QUERY),
+      client.fetch(FEATURED_ARTWORKS_QUERY),
     ])
+    const featuredArtwork = featuredArtworks?.length
+      ? featuredArtworks[Math.floor(Math.random() * featuredArtworks.length)]
+      : null
     return { artists, exhibitions, featuredArtwork }
   } catch {
     return { artists: FALLBACK_ARTISTS as Artist[], exhibitions: FALLBACK_EXHIBITIONS as Exhibition[], featuredArtwork: null }
